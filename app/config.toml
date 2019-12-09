@@ -1,0 +1,69 @@
+## Basic Configuration
+
+baseurl = "https://5thempire.pt" 
+builddrafts = false
+canonifyurls = false
+languageCode = "en-US"
+
+contentdir = "content"
+layoutdir = "layouts"
+publishdir = "public"
+
+author = "Erlich Bachman"
+title = "5th Empire"
+
+theme = "hugo-goa"
+
+## Hugo Built-in Features
+# disqusShortname = "https-shenoybr-github-io-hugo-goa-demo" # Comment out to disable Disqus.
+googleAnalytics = "XYZ"
+enableRobotsTXT = true
+
+## Site Settings
+[params]
+# author = "Erlich Bachmannn"
+intro = "Welcome"
+# description = ""
+authorimage = "fifth.png"
+dateformat = "Jan 2, 2006"
+codecategory = false
+
+
+## Site Meta Settings
+[params.meta]
+description = "Simple minimalist theme"
+keywords = "minimalist,blog,goa,hugo,developer"
+
+### Social Accounts
+#[params.social]
+#github = "<username>"
+#instagram = "<username>"
+#linkedin = "<username>"
+#twitter = "<username>"
+#facebook = "<username>"
+#google = "<username>"
+#stackoverflow = "<username>"
+#email = "you@example.com"
+
+## Extras
+[params.extra]
+copyright = "© 2019. 5thEmpire. [Some Rights Reserved](http://creativecommons.org/licenses/by/3.0/)." 
+poweredby = true
+hightlightjs = true
+
+## Main Menu
+[[menu.main]]
+    name = "code"
+    weight = 100
+    identifier = "code"
+    url = "/code/"
+#[[menu.main]]
+#    name = "about"
+#    identifier = "about"
+#    weight = 200
+#    url = "/about/"
+#[[menu.main]]
+#    name = "coderag"
+#    identifier = "coderag"
+#    weight = 300
+#    url = "/coderag/"

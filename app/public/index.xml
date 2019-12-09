@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>5th Empire</title>
+    <link>https://5thempire.pt/</link>
+    <description>Recent content on 5th Empire</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-US</language>
+    
+	<atom:link href="https://5thempire.pt/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>PySpark</title>
+      <link>https://5thempire.pt/code/pyspark/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://5thempire.pt/code/pyspark/</guid>
+      <description>PySpark is a unified analytics engine. For documentation you should check Spark and PySpark.
+This meant to be a platform for development and testing.
+PySpark version 2.4.3
+How to use this image Start a pyspark instance docker run -ti 5thempire/pyspark:latest spark-submit /opt/pyspark/pi.py  &amp;hellip;via docker-compose Example docker-compose.yml for pyspark
+version: &#39;3.4&#39; services: spark: image: 5thempire/pyspark:latest container_name: spark stdin_open: true tty: true volumes: - ./code:/opt/pyspark ports: - &amp;quot;8080:8080&amp;quot; - &amp;quot;8888:8888&amp;quot;  How to use the Makefile The Makefile is meant to automate with ease the typical tasks in the project.</description>
+    </item>
+    
+  </channel>
+</rss>
