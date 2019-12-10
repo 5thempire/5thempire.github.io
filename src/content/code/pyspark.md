@@ -2,6 +2,7 @@
 title: "PySpark"
 draft: false
 description: PySpark is a unified analytics engine, this meant to be a platform for development and testing.
+# tags: ["pyspark", "python", "docker"]
 ---
 
 ![Docker Cloud Automated build](https://img.shields.io/docker/cloud/automated/5thempire/pyspark.svg) 
