@@ -9,7 +9,7 @@ contentdir = "content"
 layoutdir = "layouts"
 publishdir = "public"
 
-author = "Erlich Bachman"
+author = ""
 title = "5th Empire"
 
 theme = "hugo-goa"
@@ -21,7 +21,7 @@ enableRobotsTXT = true
 
 ## Site Settings
 [params]
-# author = "Erlich Bachmannn"
+# author = ""
 intro = "Welcome"
 # description = ""
 authorimage = "fifth.png"
