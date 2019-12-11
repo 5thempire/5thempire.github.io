@@ -24,7 +24,7 @@ enableRobotsTXT = true
 # author = ""
 intro = "Welcome"
 # description = ""
-authorimage = "fifth.png"
+authorimage = "fifth.webp"
 dateformat = "Jan 2, 2006"
 codecategory = false
 
