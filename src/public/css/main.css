@@ -126,6 +126,7 @@ div.content
 {
     margin-top: 10px;
     bottom: 0;
+    max-width: 100%;
     color: #8b8b8b;
 }
 .header
