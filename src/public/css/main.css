@@ -68,6 +68,7 @@ li
 
     max-width: 680px;
     padding: 0 15px;
+    min-height: calc(100vh - 120px);
 }
 .content
 {
@@ -124,7 +125,7 @@ div.content
 .footer
 {
     margin-top: 10px;
-
+    bottom: 0;
     color: #8b8b8b;
 }
 .header
@@ -152,6 +153,9 @@ h3.intro
 {
     margin-top: 0px
 }
+.ul-list {
+    padding-left: 0px;
+}
 .list
 {
     font-family: 'Roboto', sans-serif;
@@ -161,9 +165,11 @@ h3.intro
 .list li
 {
     list-style: none;
+    text-align: center;
 }
 .list-entry
 {
+    text-align: center;
     font-family: 'Roboto Slab', serif;
     font-size: 25px;
     font-weight: 400;

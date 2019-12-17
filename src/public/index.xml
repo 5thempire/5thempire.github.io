@@ -19,8 +19,8 @@
       <description>PySpark is a unified analytics engine. For documentation you should check Spark and PySpark.
 This meant to be a platform for development and testing.
 PySpark version 2.4.3
-How to use this image Start a pyspark instance docker run -ti 5thempire/pyspark:latest spark-submit /opt/pyspark/pi.py  &amp;hellip;via docker-compose Example docker-compose.yml for pyspark
-version: &#39;3.4&#39; services: spark: image: 5thempire/pyspark:latest container_name: spark stdin_open: true tty: true volumes: - ./code:/opt/pyspark ports: - &amp;quot;8080:8080&amp;quot; - &amp;quot;8888:8888&amp;quot;  How to use the Makefile The Makefile is meant to automate with ease the typical tasks in the project.</description>
+How to use this image Start a pyspark instance docker run -ti 5thempire/pyspark:latest spark-submit /opt/pyspark/pi.py &amp;hellip;via docker-compose Example docker-compose.yml for pyspark
+version: &amp;#39;3.4&amp;#39; services: spark: image: 5thempire/pyspark:latest container_name: spark stdin_open: true tty: true volumes: - ./code:/opt/pyspark ports: - &amp;#34;8080:8080&amp;#34; - &amp;#34;8888:8888&amp;#34; How to use the Makefile The Makefile is meant to automate with ease the typical tasks in the project.</description>
     </item>
     
   </channel>

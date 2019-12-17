@@ -22,17 +22,23 @@ enableRobotsTXT = true
 ## Site Settings
 [params]
 # author = ""
-intro = "Welcome"
-# description = ""
-authorimage = "fifth.webp"
+intro = "An Experiment in Tech"
+title = "5th Empire"
+description = '''\"A branch of knowledge that deals with the creation and use of technical means and their
+                 interrelation with life, society, and the environment, drawing upon such subjects as 
+                 industrial arts, engineering, applied science, and pure science.\"
+                 [*from dictionary.com*](https://www.dictionary.com/browse/technology)
+              '''
+images = ["fifth.png"]
+authorimage = "fifth.png"
 dateformat = "Jan 2, 2006"
 codecategory = false
 
 
 ## Site Meta Settings
 [params.meta]
-description = "Simple minimalist theme"
-keywords = "minimalist,blog,goa,hugo,developer"
+description = "An experiment in tech"
+keywords = "python,pyspark,docker"
 
 ### Social Accounts
 #[params.social]

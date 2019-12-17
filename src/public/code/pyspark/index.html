@@ -7,8 +7,8 @@
 <meta http-equiv="content-type" content="text/html; charset=utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 
-<meta name="description" content="Simple minimalist theme">
-<meta name="keywords" content="minimalist,blog,goa,hugo,developer">
+<meta name="description" content="An experiment in tech">
+<meta name="keywords" content="python,pyspark,docker">
 
 <base href="https://5thempire.pt">
 
@@ -16,7 +16,7 @@
   5th Empire - PySpark 
 </title>
 
-<meta name="generator" content="Hugo 0.59.1" />
+<meta name="generator" content="Hugo 0.61.0" />
 
 
 
@@ -36,12 +36,21 @@
 <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
 <meta name="theme-color" content="#ffffff">
 
+<meta property="og:title" content="PySpark" />
+<meta property="og:description" content="PySpark is a unified analytics engine, this meant to be a platform for development and testing." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://5thempire.pt/code/pyspark/" />
+<meta property="og:image" content="https://5thempire.pt/fifth.png"/>
+<meta property="og:site_name" content="5th Empire" />
+
+
 </head>
 <body lang="en-US">
 <div class="container">
 
 
 <header class="row text-left title">
+  <img src="/img/PySpark.png">
   <h1 class="title">PySpark</h1>
 </header>
 <section id="category-pane" class="row meta">
@@ -57,65 +66,39 @@
 <section id="content-pane" class="row">
   <div class="col-md-12 text-justify content">
     
-    
-
-<p><img src="https://img.shields.io/docker/cloud/automated/5thempire/pyspark.svg" alt="Docker Cloud Automated build" />
-<img src="https://img.shields.io/docker/cloud/build/5thempire/pyspark.svg" alt="Docker Cloud Build Status" />
-<img src="https://img.shields.io/github/license/5thempire/pyspark.svg" alt="GitHub" /></p>
-
+    <p><img src="https://img.shields.io/docker/cloud/automated/5thempire/pyspark.svg" alt="Docker Cloud Automated build">
+<img src="https://img.shields.io/docker/cloud/build/5thempire/pyspark.svg" alt="Docker Cloud Build Status">
+<img src="https://img.shields.io/github/license/5thempire/pyspark.svg" alt="GitHub"></p>
 <p>PySpark is a unified analytics engine. For documentation you should check <a href="https://spark.apache.org/">Spark</a> and <a href="https://spark.apache.org/docs/2.4.3/api/python/index.html">PySpark</a>.</p>
-
 <p>This meant to be a platform for <strong>development</strong> and <strong>testing</strong>.</p>
-
 <p><strong>PySpark</strong> version <strong>2.4.3</strong></p>
-
 <h2 id="how-to-use-this-image">How to use this image</h2>
-
 <h3 id="start-a-pyspark-instance">Start a pyspark instance</h3>
-
-<pre><code class="language-bash">docker run -ti 5thempire/pyspark:latest spark-submit /opt/pyspark/pi.py   
-</code></pre>
-
-<h3 id="via-docker-compose">&hellip;via <code>docker-compose</code></h3>
-
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">docker run -ti 5thempire/pyspark:latest spark-submit /opt/pyspark/pi.py   
+</code></pre></div><h3 id="via-docker-compose">&hellip;via <code>docker-compose</code></h3>
 <p>Example <code>docker-compose.yml</code> for <code>pyspark</code></p>
-
-<pre><code class="language-yml">version: '3.4'
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yml" data-lang="yml">version: <span style="color:#e6db74">&#39;3.4&#39;</span>
 
 services:
   spark:
     image: 5thempire/pyspark:latest
     container_name: spark
-    stdin_open: true
-    tty: true
+    stdin_open: <span style="color:#66d9ef">true</span>
+    tty: <span style="color:#66d9ef">true</span>
     volumes:
       - ./code:/opt/pyspark
     ports:
-      - &quot;8080:8080&quot;
-      - &quot;8888:8888&quot;
-</code></pre>
-
-<h2 id="how-to-use-the-makefile">How to use the Makefile</h2>
-
+      - <span style="color:#e6db74">&#34;8080:8080&#34;</span>
+      - <span style="color:#e6db74">&#34;8888:8888&#34;</span>
+</code></pre></div><h2 id="how-to-use-the-makefile">How to use the Makefile</h2>
 <p>The Makefile is meant to automate with ease the typical tasks in the project.</p>
-
 <p>To <strong>set it up</strong>, you should run</p>
-
-<pre><code class="language-bash">make setup
-</code></pre>
-
-<p>For a <strong>pi sample</strong>, you should run</p>
-
-<pre><code class="language-bash">make pi-sample
-</code></pre>
-
-<p>To explore <strong>pdb</strong>, run the following</p>
-
-<pre><code class="language-bash">make pi-debug
-</code></pre>
-
-<h2 id="samples">Samples</h2>
-
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">make setup
+</code></pre></div><p>For a <strong>pi sample</strong>, you should run</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">make pi-sample
+</code></pre></div><p>To explore <strong>pdb</strong>, run the following</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">make pi-debug
+</code></pre></div><h2 id="samples">Samples</h2>
 <p>All the samples are based upon <a href="https://github.com/apache/spark/blob/master/examples/src/main/python/pi.py">pi.py</a>.</p>
 
   </div>
@@ -148,12 +131,13 @@ services:
 
 
 
+</div>
 <footer class="row text-center footer">
   <hr />
   
   <h6 class="text-center copyright">© 2019. 5thEmpire. <a href="http://creativecommons.org/licenses/by/3.0/">Some Rights Reserved</a>.</h6>
   
-  <h6 class="text-center powered">Powered by <a href="https://gohugo.io/">Hugo  v0.59.1</a> &amp; <a href="https://github.com/shenoybr/hugo-goa">Goa</a>.</h6>
+  <h6 class="text-center powered">Powered by <a href="https://gohugo.io/">Hugo  v0.61.0</a> &amp; <a href="https://github.com/shenoybr/hugo-goa">Goa</a>.</h6>
   
       
       <h6><a href="" aria-label="RSS Feed"><i class="fas fa-rss" aria-hidden="true"></i></a></h6>
@@ -161,7 +145,6 @@ services:
   
 </footer>
 
-</div>
 
 
 
@@ -172,7 +155,7 @@ services:
 var doNotTrack = false;
 if (!doNotTrack) {
 	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
-	ga('create', 'XYZ', 'auto');
+	ga('create', 'UA-154354893-1', 'auto');
 	
 	ga('send', 'pageview');
 }
