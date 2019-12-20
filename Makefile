@@ -6,3 +6,7 @@ local:
 
 page:
 	cp -R src/public/* .
+
+cleanup:
+	rm *.html *.png *.xml *.json *.svg *.ico
+	ls -d */ | grep -v "src/" | xargs rm -rf
