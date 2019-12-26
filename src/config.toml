@@ -34,6 +34,12 @@ authorimage = "fifth.png"
 dateformat = "Jan 2, 2006"
 codecategory = false
 
+## Sitemap
+[sitemap]
+changefreq = "monthly"
+filename = "sitemap.xml"
+priority = 0.5
+
 
 ## Site Meta Settings
 [params.meta]
