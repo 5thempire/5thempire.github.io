@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="content-type" content="text/html; charset=utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+<meta name="description" content="An experiment in tech">
+<meta name="keywords" content="python,pyspark,docker">
+
+<base href="https://5thempire.pt">
+
+<title>
+  5th Empire - Amazon DynamoDB 
+</title>
+
+<meta name="generator" content="Hugo 0.61.0" />
+
+
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:300,400|Roboto+Slab:400,700|Roboto:300,300i,400,400i,500,500i,700,700i">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css" integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay" crossorigin="anonymous">
+<link rel="stylesheet" href="https://5thempire.pt/css/main.css">
+<link rel="stylesheet" href="https://5thempire.pt/css/custom.css">
+
+
+
+
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" href="/favicon-32x32.png" sizes="32x32">
+<link rel="icon" type="image/png" href="/favicon-16x16.png" sizes="16x16">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+<meta name="theme-color" content="#ffffff">
+
+<meta property="og:title" content="Amazon DynamoDB" />
+<meta property="og:description" content="A python approach on Amazon DynamoDB" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://5thempire.pt/code/aws-dynamo/" />
+<meta property="og:image" content="https://5thempire.pt/fifth.png"/>
+<meta property="og:site_name" content="5th Empire" />
+
+
+</head>
+<body lang="en-US">
+<div class="container">
+
+
+<header class="row text-left title">
+  <img src="/img/Amazon%20DynamoDB.png">
+  <h1 class="title">Amazon DynamoDB</h1>
+</header>
+<section id="category-pane" class="row meta">
+  
+  <div class="col-md-12">
+    <h6 class="text-left meta">
+       
+      
+    </h6>
+  </div>
+  
+</section>
+<section id="content-pane" class="row">
+  <div class="col-md-12 text-justify content">
+    
+    <p>Python approach on how to interact with Amazon DynamoDB. Check <a href="https://github.com/5thempire/aws-dynamodb">https://github.com/5thempire/aws-dynamodb</a> for the complete source code. The requirements are:</p>
+<ul>
+<li><a href="https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/dynamodb.html">boto3</a></li>
+<li><a href="https://hub.docker.com/r/amazon/dynamodb-local/">DynamoDB docker</a></li>
+<li><a href="https://www.python.org/">Python</a></li>
+</ul>
+<h2 id="schema-definition">Schema Definition</h2>
+<h3 id="key-value-schema">Key-Value Schema</h3>
+<p>A table schema can just be the definition of the index, however this configuration is only recomended for when the <strong>IndexKey</strong> is the only index we want to search for.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">SIMPLE_SCHEMA_TABLE_NAME <span style="color:#f92672">=</span> <span style="color:#e6db74"></span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">SimpleSchemaTableName</span><span style="color:#e6db74">&#39;</span>
+SIMPLE_SCHEMA_KEY <span style="color:#f92672">=</span> <span style="color:#e6db74"></span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">IndexKey</span><span style="color:#e6db74">&#39;</span>
+SIMPLE_SCHEMA_VALUE <span style="color:#f92672">=</span> <span style="color:#e6db74"></span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">Value</span><span style="color:#e6db74">&#39;</span>
+SIMPLE_SCHEMA <span style="color:#f92672">=</span> {
+    <span style="color:#e6db74"></span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">TableName</span><span style="color:#e6db74">&#39;</span>: SIMPLE_SCHEMA_TABLE_NAME,
+    <span style="color:#e6db74"></span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">AttributeDefinitions</span><span style="color:#e6db74">&#39;</span>: [
+        {
+            <span style="color:#e6db74"></span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">AttributeName</span><span style="color:#e6db74">&#39;</span>: SIMPLE_SCHEMA_KEY,
+            <span style="color:#e6db74"></span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">AttributeType</span><span style="color:#e6db74">&#39;</span>: <span style="color:#e6db74"></span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">S</span><span style="color:#e6db74">&#39;</span>
+        }
+    ],
+    <span style="color:#e6db74"></span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">KeySchema</span><span style="color:#e6db74">&#39;</span>: [
+        {
+            <span style="color:#e6db74"></span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">AttributeName</span><span style="color:#e6db74">&#39;</span>: SIMPLE_SCHEMA_KEY,
+            <span style="color:#e6db74"></span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">KeyType</span><span style="color:#e6db74">&#39;</span>: <span style="color:#e6db74"></span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">HASH</span><span style="color:#e6db74">&#39;</span>
+        }
+    ],
+    <span style="color:#e6db74"></span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">ProvisionedThroughput</span><span style="color:#e6db74">&#39;</span>:{
+        <span style="color:#e6db74"></span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">ReadCapacityUnits</span><span style="color:#e6db74">&#39;</span>: <span style="color:#ae81ff">10</span>,
+        <span style="color:#e6db74"></span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">WriteCapacityUnits</span><span style="color:#e6db74">&#39;</span>: <span style="color:#ae81ff">10</span>
+    }
+}
+</code></pre></div><h3 id="complex-schema">Complex Schema</h3>
+<p>The following schema has two indexes, <strong>AttributeOneKey</strong> and <strong>AttributeTwoKey</strong>. Another important thing is the introduction of the field <a href="https://docs.aws.amazon.com/amazondynamodb/latest/APIReference/API_Projection.html"><strong>ProjectionType</strong></a>, which defines what is included in the response.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">COMPLEX_SCHEMA_TABLE_NAME <span style="color:#f92672">=</span> <span style="color:#e6db74"></span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">ComplexSchemaTableName</span><span style="color:#e6db74">&#39;</span>
+COMPLEX_SCHEMA_KEY_ONE <span style="color:#f92672">=</span> <span style="color:#e6db74"></span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">AttributeOneKey</span><span style="color:#e6db74">&#39;</span>
+COMPLEX_SCHEMA_KEY_TWO <span style="color:#f92672">=</span> <span style="color:#e6db74"></span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">AttributeTwoKey</span><span style="color:#e6db74">&#39;</span>
+COMPLEX_SCHEMA_KEY_THREE <span style="color:#f92672">=</span> <span style="color:#e6db74"></span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">AttributeThreeKey</span><span style="color:#e6db74">&#39;</span>
+COMPLEX_SCHEMA_INDEX_TWO <span style="color:#f92672">=</span> <span style="color:#e6db74"></span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">AttributeTwoIndexName</span><span style="color:#e6db74">&#39;</span>
+COMPLEX_SCHEMA <span style="color:#f92672">=</span> {
+    <span style="color:#e6db74"></span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">TableName</span><span style="color:#e6db74">&#39;</span>: COMPLEX_SCHEMA_TABLE_NAME,
+    <span style="color:#e6db74"></span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">AttributeDefinitions</span><span style="color:#e6db74">&#39;</span>: [
+        {
+            <span style="color:#e6db74"></span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">AttributeName</span><span style="color:#e6db74">&#39;</span>: COMPLEX_SCHEMA_KEY_ONE,
+            <span style="color:#e6db74"></span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">AttributeType</span><span style="color:#e6db74">&#39;</span>: <span style="color:#e6db74"></span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">S</span><span style="color:#e6db74">&#39;</span>
+        },
+        {
+            <span style="color:#e6db74"></span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">AttributeName</span><span style="color:#e6db74">&#39;</span>: COMPLEX_SCHEMA_KEY_TWO,
+            <span style="color:#e6db74"></span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">AttributeType</span><span style="color:#e6db74">&#39;</span>: <span style="color:#e6db74"></span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">S</span><span style="color:#e6db74">&#39;</span>
+        }
+        ],
+    <span style="color:#e6db74"></span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">KeySchema</span><span style="color:#e6db74">&#39;</span>: [
+        {
+            <span style="color:#e6db74"></span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">AttributeName</span><span style="color:#e6db74">&#39;</span>: COMPLEX_SCHEMA_KEY_ONE,
+            <span style="color:#e6db74"></span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">KeyType</span><span style="color:#e6db74">&#39;</span>: <span style="color:#e6db74"></span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">HASH</span><span style="color:#e6db74">&#39;</span>
+        }
+    ],
+    <span style="color:#e6db74"></span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">ProvisionedThroughput</span><span style="color:#e6db74">&#39;</span>:{
+        <span style="color:#e6db74"></span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">ReadCapacityUnits</span><span style="color:#e6db74">&#39;</span>: <span style="color:#ae81ff">10</span>,
+        <span style="color:#e6db74"></span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">WriteCapacityUnits</span><span style="color:#e6db74">&#39;</span>: <span style="color:#ae81ff">10</span>
+    },
+    <span style="color:#e6db74"></span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">GlobalSecondaryIndexes</span><span style="color:#e6db74">&#39;</span> : [{
+      <span style="color:#e6db74"></span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">IndexName</span><span style="color:#e6db74">&#39;</span> : COMPLEX_SCHEMA_INDEX_TWO,
+      <span style="color:#e6db74"></span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">KeySchema</span><span style="color:#e6db74">&#39;</span> : [
+        {
+          <span style="color:#e6db74"></span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">AttributeName</span><span style="color:#e6db74">&#39;</span> : COMPLEX_SCHEMA_KEY_TWO,
+          <span style="color:#e6db74"></span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">KeyType</span><span style="color:#e6db74">&#39;</span> : <span style="color:#e6db74"></span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">HASH</span><span style="color:#e6db74">&#39;</span>
+        }
+      ],
+      <span style="color:#e6db74"></span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">Projection</span><span style="color:#e6db74">&#39;</span> : {
+        <span style="color:#e6db74"></span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">ProjectionType</span><span style="color:#e6db74">&#39;</span> : <span style="color:#e6db74"></span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">ALL</span><span style="color:#e6db74">&#39;</span>
+      },
+      <span style="color:#e6db74"></span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">ProvisionedThroughput</span><span style="color:#e6db74">&#39;</span> : {
+        <span style="color:#e6db74"></span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">ReadCapacityUnits</span><span style="color:#e6db74">&#39;</span> : <span style="color:#ae81ff">10</span>,
+        <span style="color:#e6db74"></span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">WriteCapacityUnits</span><span style="color:#e6db74">&#39;</span> : <span style="color:#ae81ff">10</span>
+      }
+    }],
+}
+</code></pre></div><h2 id="python-classes">Python classes</h2>
+<h3 id="dynamogeneralclass">DynamoGeneralClass</h3>
+<p>A general class with some base actions.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#f92672">import</span> sys
+<span style="color:#f92672">from</span> abc <span style="color:#f92672">import</span> abstractmethod
+
+<span style="color:#f92672">import</span> boto3
+
+
+<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">DynamoGeneralClass</span>:
+
+    <span style="color:#66d9ef">def</span> __init__(self, conf):
+        self<span style="color:#f92672">.</span>conf <span style="color:#f92672">=</span> conf
+
+        <span style="color:#66d9ef">try</span>:
+            self<span style="color:#f92672">.</span>dynamodb <span style="color:#f92672">=</span> boto3<span style="color:#f92672">.</span>client(<span style="color:#e6db74"></span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">dynamodb</span><span style="color:#e6db74">&#39;</span>, <span style="color:#f92672">*</span><span style="color:#f92672">*</span>conf)
+        <span style="color:#66d9ef">except</span> <span style="color:#a6e22e">Exception</span> <span style="color:#66d9ef">as</span> err:
+            <span style="color:#66d9ef">print</span>(<span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">{} - {}</span><span style="color:#e6db74">&#34;</span><span style="color:#f92672">.</span>format(__name__, err))
+            sys<span style="color:#f92672">.</span>exit(<span style="color:#ae81ff">1</span>)
+
+    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">create_table</span>(self, table_schema, table_name):
+        self<span style="color:#f92672">.</span>table_name <span style="color:#f92672">=</span> table_name
+        <span style="color:#66d9ef">try</span>:
+            self<span style="color:#f92672">.</span>dynamodb<span style="color:#f92672">.</span>create_table(<span style="color:#f92672">*</span><span style="color:#f92672">*</span>table_schema)
+        <span style="color:#66d9ef">except</span> <span style="color:#a6e22e">Exception</span> <span style="color:#66d9ef">as</span> err:
+            <span style="color:#66d9ef">print</span>(<span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">{} - already exists - {}</span><span style="color:#e6db74">&#34;</span><span style="color:#f92672">.</span>format(table_name, err))
+        <span style="color:#66d9ef">finally</span>:
+            <span style="color:#75715e"># Wait for the table to exist before exiting</span>
+            waiter <span style="color:#f92672">=</span> self<span style="color:#f92672">.</span>dynamodb<span style="color:#f92672">.</span>get_waiter(<span style="color:#e6db74"></span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">table_exists</span><span style="color:#e6db74">&#39;</span>)
+            waiter<span style="color:#f92672">.</span>wait(TableName<span style="color:#f92672">=</span>table_name)
+
+    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">get_table</span>(self, table_name):
+        dyndb <span style="color:#f92672">=</span> boto3<span style="color:#f92672">.</span>resource(<span style="color:#e6db74"></span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">dynamodb</span><span style="color:#e6db74">&#39;</span>, <span style="color:#f92672">*</span><span style="color:#f92672">*</span>self<span style="color:#f92672">.</span>conf)
+        <span style="color:#66d9ef">return</span> dyndb<span style="color:#f92672">.</span>Table(table_name)
+
+    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">list_all</span>(self):
+        <span style="color:#e6db74"></span><span style="color:#e6db74">&#34;&#34;&#34;</span><span style="color:#e6db74">
+</span><span style="color:#e6db74"></span><span style="color:#e6db74">        For TESTING puposes ONLY, should not be used in</span><span style="color:#e6db74">
+</span><span style="color:#e6db74"></span><span style="color:#e6db74">        production</span><span style="color:#e6db74">
+</span><span style="color:#e6db74"></span><span style="color:#e6db74">        </span><span style="color:#e6db74">&#34;&#34;&#34;</span>
+        <span style="color:#66d9ef">return</span> self<span style="color:#f92672">.</span>dynamodb<span style="color:#f92672">.</span>scan(TableName<span style="color:#f92672">=</span>self<span style="color:#f92672">.</span>table_name)
+
+    <span style="color:#a6e22e">@abstractmethod</span>
+    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">get_params</span>(self, key):
+        <span style="color:#66d9ef">pass</span>
+
+    <span style="color:#a6e22e">@abstractmethod</span>
+    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">put_params</span>(self, key, data):
+        <span style="color:#66d9ef">pass</span>
+
+    <span style="color:#a6e22e">@abstractmethod</span>
+    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">update_params</span>(self, key, data):
+        <span style="color:#66d9ef">pass</span>
+
+    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">get</span>(self, key):
+        <span style="color:#e6db74"></span><span style="color:#e6db74">&#34;&#34;&#34;</span><span style="color:#e6db74">
+</span><span style="color:#e6db74"></span><span style="color:#e6db74">        Get from DynamoDB</span><span style="color:#e6db74">
+</span><span style="color:#e6db74"></span><span style="color:#e6db74">        </span><span style="color:#e6db74">&#34;&#34;&#34;</span>
+        params <span style="color:#f92672">=</span> self<span style="color:#f92672">.</span>get_params(key)
+        response <span style="color:#f92672">=</span> self<span style="color:#f92672">.</span>dynamodb<span style="color:#f92672">.</span>get_item(<span style="color:#f92672">*</span><span style="color:#f92672">*</span>params)
+        <span style="color:#66d9ef">return</span> response
+
+    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">put</span>(self, key, data):
+        <span style="color:#e6db74"></span><span style="color:#e6db74">&#34;&#34;&#34;</span><span style="color:#e6db74">
+</span><span style="color:#e6db74"></span><span style="color:#e6db74">        Write to DynamoDB</span><span style="color:#e6db74">
+</span><span style="color:#e6db74"></span><span style="color:#e6db74">        </span><span style="color:#e6db74">&#34;&#34;&#34;</span>
+        params <span style="color:#f92672">=</span> self<span style="color:#f92672">.</span>put_params(key, data)
+        self<span style="color:#f92672">.</span>dynamodb<span style="color:#f92672">.</span>put_item(<span style="color:#f92672">*</span><span style="color:#f92672">*</span>params)
+
+    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">update</span>(self, key, data):
+        <span style="color:#e6db74"></span><span style="color:#e6db74">&#34;&#34;&#34;</span><span style="color:#e6db74">
+</span><span style="color:#e6db74"></span><span style="color:#e6db74">        Update to DynamoDB</span><span style="color:#e6db74">
+</span><span style="color:#e6db74"></span><span style="color:#e6db74">        </span><span style="color:#e6db74">&#34;&#34;&#34;</span>
+        params <span style="color:#f92672">=</span> self<span style="color:#f92672">.</span>update_params(key, data)
+        self<span style="color:#f92672">.</span>dynamodb<span style="color:#f92672">.</span>update_item(<span style="color:#f92672">*</span><span style="color:#f92672">*</span>params)
+
+    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">exists</span>(self, key):
+        <span style="color:#e6db74"></span><span style="color:#e6db74">&#34;&#34;&#34;</span><span style="color:#e6db74">
+</span><span style="color:#e6db74"></span><span style="color:#e6db74">        Returns a boolean depending</span><span style="color:#e6db74">
+</span><span style="color:#e6db74"></span><span style="color:#e6db74">        on the existence of the key</span><span style="color:#e6db74">
+</span><span style="color:#e6db74"></span><span style="color:#e6db74">        </span><span style="color:#e6db74">&#34;&#34;&#34;</span>
+        data <span style="color:#f92672">=</span> self<span style="color:#f92672">.</span>get(key)
+        <span style="color:#66d9ef">return</span> True <span style="color:#66d9ef">if</span> <span style="color:#e6db74"></span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">Item</span><span style="color:#e6db74">&#39;</span> <span style="color:#f92672">in</span> data <span style="color:#66d9ef">else</span> False
+</code></pre></div><h3 id="simpletableclass">SimpleTableClass</h3>
+<p>The next class will inherit from the <strong>DynamoGeneralClass</strong> to connect manipulate the table <strong>SimpleSchemaTableName</strong>.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#f92672">from</span> dyn_base <span style="color:#f92672">import</span> DynamoGeneralClass
+<span style="color:#f92672">from</span> schema <span style="color:#f92672">import</span> SIMPLE_SCHEMA,SIMPLE_SCHEMA_TABLE_NAME, SIMPLE_SCHEMA_KEY, SIMPLE_SCHEMA_VALUE
+
+
+<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">SimpleTableClass</span>(DynamoGeneralClass):
+
+    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">get_params</span>(self, key):
+        params <span style="color:#f92672">=</span> {
+            <span style="color:#e6db74"></span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">TableName</span><span style="color:#e6db74">&#39;</span>: SIMPLE_SCHEMA_TABLE_NAME,
+            <span style="color:#e6db74"></span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">Key</span><span style="color:#e6db74">&#39;</span>: {
+                SIMPLE_SCHEMA_KEY: {<span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">S</span><span style="color:#e6db74">&#34;</span>: key}
+            }
+        }
+        <span style="color:#66d9ef">return</span> params
+
+    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">put_params</span>(self, key, data):
+        params <span style="color:#f92672">=</span> {
+            <span style="color:#e6db74"></span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">TableName</span><span style="color:#e6db74">&#39;</span>: SIMPLE_SCHEMA_TABLE_NAME,
+            <span style="color:#e6db74"></span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">Item</span><span style="color:#e6db74">&#39;</span>: {
+                SIMPLE_SCHEMA_KEY: {<span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">S</span><span style="color:#e6db74">&#34;</span>: key},
+            }
+        }
+        params[<span style="color:#e6db74"></span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">Item</span><span style="color:#e6db74">&#39;</span>]<span style="color:#f92672">.</span>update(data)
+        <span style="color:#66d9ef">return</span> params
+
+    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">set_value</span>(self, key, value):
+        params <span style="color:#f92672">=</span> {
+            SIMPLE_SCHEMA_VALUE: {<span style="color:#e6db74"></span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">S</span><span style="color:#e6db74">&#39;</span>: value}
+        }
+        self<span style="color:#f92672">.</span>put(key, params)
+</code></pre></div><h3 id="complextableclass">ComplexTableClass</h3>
+<p>The next class will inherit from the <strong>DynamoGeneralClass</strong> to connect manipulate the table <strong>ComplexSchemaTableName</strong>.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#f92672">from</span> datetime <span style="color:#f92672">import</span> datetime
+
+<span style="color:#f92672">from</span> dyn_base <span style="color:#f92672">import</span> DynamoGeneralClass
+<span style="color:#f92672">from</span> schema <span style="color:#f92672">import</span> (COMPLEX_SCHEMA, COMPLEX_SCHEMA_INDEX_TWO, COMPLEX_SCHEMA_KEY_ONE, COMPLEX_SCHEMA_KEY_THREE,
+                    COMPLEX_SCHEMA_KEY_TWO, COMPLEX_SCHEMA_TABLE_NAME)
+
+GREEN <span style="color:#f92672">=</span> <span style="color:#e6db74"></span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">green</span><span style="color:#e6db74">&#39;</span>
+RED <span style="color:#f92672">=</span> <span style="color:#e6db74"></span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">red</span><span style="color:#e6db74">&#39;</span>
+
+
+<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">ComplexTableClass</span>(DynamoGeneralClass):
+
+    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">get_params</span>(self, key):
+        params <span style="color:#f92672">=</span> {
+            <span style="color:#e6db74"></span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">TableName</span><span style="color:#e6db74">&#39;</span>: COMPLEX_SCHEMA_TABLE_NAME,
+            <span style="color:#e6db74"></span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">Key</span><span style="color:#e6db74">&#39;</span>: {
+                COMPLEX_SCHEMA_KEY_ONE: {<span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">S</span><span style="color:#e6db74">&#34;</span>: key}
+            }
+        }
+        <span style="color:#66d9ef">return</span> params
+
+    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">put_params</span>(self, key, data):
+        params <span style="color:#f92672">=</span> {
+            <span style="color:#e6db74"></span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">TableName</span><span style="color:#e6db74">&#39;</span>: COMPLEX_SCHEMA_TABLE_NAME,
+            <span style="color:#e6db74"></span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">Item</span><span style="color:#e6db74">&#39;</span>: {
+                COMPLEX_SCHEMA_KEY_ONE: {<span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">S</span><span style="color:#e6db74">&#34;</span>: key},
+            }
+        }
+        params[<span style="color:#e6db74"></span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">Item</span><span style="color:#e6db74">&#39;</span>]<span style="color:#f92672">.</span>update(data)
+        <span style="color:#66d9ef">return</span> params
+
+    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">update_params</span>(self, key, value, timestamp):
+        params <span style="color:#f92672">=</span> {
+            <span style="color:#e6db74"></span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">ExpressionAttributeNames</span><span style="color:#e6db74">&#39;</span>: {
+                <span style="color:#e6db74"></span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">#LU</span><span style="color:#e6db74">&#39;</span>: COMPLEX_SCHEMA_KEY_THREE,
+                <span style="color:#e6db74"></span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">#S</span><span style="color:#e6db74">&#39;</span>: COMPLEX_SCHEMA_KEY_TWO
+            },
+            <span style="color:#e6db74"></span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">ExpressionAttributeValues</span><span style="color:#e6db74">&#39;</span>: {
+                <span style="color:#e6db74"></span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">:lu</span><span style="color:#e6db74">&#39;</span>: {
+                    <span style="color:#e6db74"></span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">S</span><span style="color:#e6db74">&#39;</span>: timestamp
+                },
+                <span style="color:#e6db74"></span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">:s</span><span style="color:#e6db74">&#39;</span>: {
+                    <span style="color:#e6db74"></span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">S</span><span style="color:#e6db74">&#39;</span>: value
+                }
+            },
+            <span style="color:#e6db74"></span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">Key</span><span style="color:#e6db74">&#39;</span>: {
+                COMPLEX_SCHEMA_KEY_ONE: {<span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">S</span><span style="color:#e6db74">&#34;</span>: key}
+            },
+            <span style="color:#e6db74"></span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">ReturnValues</span><span style="color:#e6db74">&#39;</span>: <span style="color:#e6db74"></span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">UPDATED_NEW</span><span style="color:#e6db74">&#39;</span>,
+            <span style="color:#e6db74"></span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">TableName</span><span style="color:#e6db74">&#39;</span>: COMPLEX_SCHEMA_TABLE_NAME,
+            <span style="color:#e6db74"></span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">UpdateExpression</span><span style="color:#e6db74">&#39;</span>: <span style="color:#e6db74"></span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">SET #LU = :lu, #S = :s</span><span style="color:#e6db74">&#39;</span>
+        }
+        <span style="color:#66d9ef">return</span> params
+
+    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">filter_by_key_one</span>(self, key, status):
+        <span style="color:#e6db74"></span><span style="color:#e6db74">&#34;&#34;&#34;</span><span style="color:#e6db74">
+</span><span style="color:#e6db74"></span><span style="color:#e6db74">        Filters all entries by key one and key two</span><span style="color:#e6db74">
+</span><span style="color:#e6db74"></span><span style="color:#e6db74">        </span><span style="color:#e6db74">&#34;&#34;&#34;</span>
+        response <span style="color:#f92672">=</span> self<span style="color:#f92672">.</span>dynamodb<span style="color:#f92672">.</span>query(TableName<span style="color:#f92672">=</span>COMPLEX_SCHEMA_TABLE_NAME,
+                                       KeyConditionExpression<span style="color:#f92672">=</span><span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">{} = :key</span><span style="color:#e6db74">&#34;</span><span style="color:#f92672">.</span>format(COMPLEX_SCHEMA_KEY_ONE),
+                                       FilterExpression<span style="color:#f92672">=</span><span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">#S = :status</span><span style="color:#e6db74">&#34;</span>,
+                                       ExpressionAttributeValues<span style="color:#f92672">=</span>{<span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">:status</span><span style="color:#e6db74">&#34;</span>: {<span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">S</span><span style="color:#e6db74">&#34;</span>: status},
+                                                                  <span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">:key</span><span style="color:#e6db74">&#34;</span>: {<span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">S</span><span style="color:#e6db74">&#34;</span>: key}},
+                                       ExpressionAttributeNames<span style="color:#f92672">=</span>{<span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">#S</span><span style="color:#e6db74">&#34;</span>: COMPLEX_SCHEMA_KEY_TWO})
+        <span style="color:#66d9ef">return</span> response
+
+    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">filter_by_key_two</span>(self, status):
+        <span style="color:#e6db74"></span><span style="color:#e6db74">&#34;&#34;&#34;</span><span style="color:#e6db74">
+</span><span style="color:#e6db74"></span><span style="color:#e6db74">        Filters all entries by key two</span><span style="color:#e6db74">
+</span><span style="color:#e6db74"></span><span style="color:#e6db74">        </span><span style="color:#e6db74">&#34;&#34;&#34;</span>
+        response <span style="color:#f92672">=</span> self<span style="color:#f92672">.</span>dynamodb<span style="color:#f92672">.</span>query(TableName<span style="color:#f92672">=</span>COMPLEX_SCHEMA_TABLE_NAME,
+                                       IndexName<span style="color:#f92672">=</span>COMPLEX_SCHEMA_INDEX_TWO,
+                                       KeyConditionExpression<span style="color:#f92672">=</span><span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">#S = :status</span><span style="color:#e6db74">&#34;</span>,
+                                       ExpressionAttributeValues<span style="color:#f92672">=</span>{<span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">:status</span><span style="color:#e6db74">&#34;</span>: {<span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">S</span><span style="color:#e6db74">&#34;</span>: status}},
+                                       ExpressionAttributeNames<span style="color:#f92672">=</span>{<span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">#S</span><span style="color:#e6db74">&#34;</span>: COMPLEX_SCHEMA_KEY_TWO})
+        <span style="color:#66d9ef">return</span> response
+
+    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">update</span>(self, key, status):
+        <span style="color:#e6db74"></span><span style="color:#e6db74">&#34;&#34;&#34;</span><span style="color:#e6db74">
+</span><span style="color:#e6db74"></span><span style="color:#e6db74">        Update to DynamoDB</span><span style="color:#e6db74">
+</span><span style="color:#e6db74"></span><span style="color:#e6db74">        </span><span style="color:#e6db74">&#34;&#34;&#34;</span>
+        timestamp <span style="color:#f92672">=</span> datetime<span style="color:#f92672">.</span>utcnow()<span style="color:#f92672">.</span>strftime(<span style="color:#e6db74"></span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">%</span><span style="color:#e6db74">Y-</span><span style="color:#e6db74">%</span><span style="color:#e6db74">m-</span><span style="color:#e6db74">%d</span><span style="color:#e6db74">-</span><span style="color:#e6db74">%</span><span style="color:#e6db74">H-</span><span style="color:#e6db74">%</span><span style="color:#e6db74">M</span><span style="color:#e6db74">&#39;</span>)
+        params <span style="color:#f92672">=</span> self<span style="color:#f92672">.</span>update_params(key, status, timestamp)
+
+        self<span style="color:#f92672">.</span>dynamodb<span style="color:#f92672">.</span>update_item(<span style="color:#f92672">*</span><span style="color:#f92672">*</span>params)
+</code></pre></div><h2 id="amazon-dynamodb-docker">Amazon DynamoDB Docker</h2>
+<p>To test the implementation use the Amazon DynamoDB docker image.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">docker run -p 8000:8000 amazon/dynamodb-local
+</code></pre></div><p>Set Amazon DynamoDB configuration as:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">aws_conf <span style="color:#f92672">=</span> {
+    <span style="color:#e6db74"></span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">aws_access_key_id</span><span style="color:#e6db74">&#39;</span>: <span style="color:#e6db74"></span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">dummy_key</span><span style="color:#e6db74">&#39;</span>,
+    <span style="color:#e6db74"></span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">aws_secret_access_key</span><span style="color:#e6db74">&#39;</span>: <span style="color:#e6db74"></span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">dummy_secret</span><span style="color:#e6db74">&#39;</span>,
+    <span style="color:#e6db74"></span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">region_name</span><span style="color:#e6db74">&#39;</span>: <span style="color:#e6db74"></span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">dummy_region</span><span style="color:#e6db74">&#39;</span>,
+    <span style="color:#e6db74"></span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">endpoint_url</span><span style="color:#e6db74">&#39;</span>: <span style="color:#e6db74"></span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">http://localhost:8000</span><span style="color:#e6db74">&#39;</span>
+    }
+</code></pre></div>
+  </div>
+</section>
+<section id="tag-pane" class="row meta">
+  
+  <div class="col-md-12">
+    <h6 class="text-right meta">
+      
+    </h6>
+  </div>
+  
+</section>
+
+
+
+
+
+
+
+
+<section id="menu-pane" class="row menu text-center">
+  
+  
+  <span><a class="menu-item" href="https://5thempire.pt/code/pyspark/">&lt; prev | </a></span>
+  
+  
+  <span><a class="menu-item" href="/code">code</a></span>
+  
+  
+  
+  <h4 class="text-center"><a class="menu-item" href="https://5thempire.pt">home</a></h4>
+</section>
+
+
+
+</div>
+<footer class="row text-center footer">
+  <hr />
+  
+  <h6 class="text-center copyright">© 2019. 5thEmpire. <a href="http://creativecommons.org/licenses/by/3.0/">Some Rights Reserved</a>.</h6>
+  
+  <h6 class="text-center powered">Powered by <a href="https://gohugo.io/">Hugo  v0.61.0</a> &amp; <a href="https://github.com/shenoybr/hugo-goa">Goa</a>.</h6>
+  
+      
+      <h6><a href="" aria-label="RSS Feed"><i class="fas fa-rss" aria-hidden="true"></i></a></h6>
+    
+  
+</footer>
+
+
+
+
+
+
+
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'UA-154354893-1', 'auto');
+	
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script src="js/main.js"></script>
+<script src="js/custom.js"></script>
+</body>
+</html>
+
+

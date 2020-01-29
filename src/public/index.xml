@@ -11,6 +11,17 @@
     
     
     <item>
+      <title>Amazon DynamoDB</title>
+      <link>https://5thempire.pt/code/aws-dynamo/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://5thempire.pt/code/aws-dynamo/</guid>
+      <description>Python approach on how to interact with Amazon DynamoDB. Check https://github.com/5thempire/aws-dynamodb for the complete source code. The requirements are:
+ boto3 DynamoDB docker Python  Schema Definition Key-Value Schema A table schema can just be the definition of the index, however this configuration is only recomended for when the IndexKey is the only index we want to search for.
+SIMPLE_SCHEMA_TABLE_NAME = &amp;#39;SimpleSchemaTableName&amp;#39; SIMPLE_SCHEMA_KEY = &amp;#39;IndexKey&amp;#39; SIMPLE_SCHEMA_VALUE = &amp;#39;Value&amp;#39; SIMPLE_SCHEMA = { &amp;#39;TableName&amp;#39;: SIMPLE_SCHEMA_TABLE_NAME, &amp;#39;AttributeDefinitions&amp;#39;: [ { &amp;#39;AttributeName&amp;#39;: SIMPLE_SCHEMA_KEY, &amp;#39;AttributeType&amp;#39;: &amp;#39;S&amp;#39; } ], &amp;#39;KeySchema&amp;#39;: [ { &amp;#39;AttributeName&amp;#39;: SIMPLE_SCHEMA_KEY, &amp;#39;KeyType&amp;#39;: &amp;#39;HASH&amp;#39; } ], &amp;#39;ProvisionedThroughput&amp;#39;:{ &amp;#39;ReadCapacityUnits&amp;#39;: 10, &amp;#39;WriteCapacityUnits&amp;#39;: 10 } } Complex Schema The following schema has two indexes, AttributeOneKey and AttributeTwoKey.</description>
+    </item>
+    
+    <item>
       <title>PySpark</title>
       <link>https://5thempire.pt/code/pyspark/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>

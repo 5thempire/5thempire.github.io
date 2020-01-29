@@ -2,6 +2,7 @@
 title: "PySpark"
 draft: false
 description: PySpark is a unified analytics engine, this meant to be a platform for development and testing.
+toc: false
 # tags: ["pyspark", "python", "docker"]
 ---
 
