@@ -15,7 +15,7 @@ Python approach on how to interact with Amazon DynamoDB. Check [https://github.c
 
 ### Key-Value Schema
 
-A table schema can just be the definition of the index, however this configuration is only recomended for when the **IndexKey** is the only index we want to search for.
+A table schema can just be the definition of the index, however this configuration is only recommended for when the **IndexKey** is the only index we want to search for.
 
 ```python
 SIMPLE_SCHEMA_TABLE_NAME = 'SimpleSchemaTableName'
