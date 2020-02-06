@@ -1,7 +1,7 @@
 <section id="list-pane" class="row list">
   <img src="/img/{{ .Title }}.png">
   <ul class="ul-list">
-    {{ range .Data.Pages.ByPublishDate.Reverse }}
+    {{ range .Data.Pages.ByTitle }}
     <li class="list-entry">
       <a class="list-entry-link" href="{{ .Permalink }}">{{ .Title }}</a>
       <p class="meta">
