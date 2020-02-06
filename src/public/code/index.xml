@@ -17,8 +17,8 @@
       
       <guid>https://5thempire.pt/code/aws-dynamo/</guid>
       <description>Python approach on how to interact with Amazon DynamoDB. Check https://github.com/5thempire/aws-dynamodb for the complete source code. The requirements are:
- boto3 DynamoDB docker Python  Schema Definition Key-Value Schema A table schema can just be the definition of the index, however this configuration is only recommended for when the IndexKey is the only index we want to search for.
-SIMPLE_SCHEMA_TABLE_NAME = &amp;#39;SimpleSchemaTableName&amp;#39; SIMPLE_SCHEMA_KEY = &amp;#39;IndexKey&amp;#39; SIMPLE_SCHEMA_VALUE = &amp;#39;Value&amp;#39; SIMPLE_SCHEMA = { &amp;#39;TableName&amp;#39;: SIMPLE_SCHEMA_TABLE_NAME, &amp;#39;AttributeDefinitions&amp;#39;: [ { &amp;#39;AttributeName&amp;#39;: SIMPLE_SCHEMA_KEY, &amp;#39;AttributeType&amp;#39;: &amp;#39;S&amp;#39; } ], &amp;#39;KeySchema&amp;#39;: [ { &amp;#39;AttributeName&amp;#39;: SIMPLE_SCHEMA_KEY, &amp;#39;KeyType&amp;#39;: &amp;#39;HASH&amp;#39; } ], &amp;#39;ProvisionedThroughput&amp;#39;:{ &amp;#39;ReadCapacityUnits&amp;#39;: 10, &amp;#39;WriteCapacityUnits&amp;#39;: 10 } } Complex Schema The following schema has two indexes, AttributeOneKey and AttributeTwoKey.</description>
+ boto3 DynamoDB docker Python  Data model Definition In these examples two different data models are used, their choice is meant to illustrate what can be achieved and how it can be operated.
+ Key-Value data model for domains Document data model for logs  It&#39;s advisable that you look at ProvisionedThroughput.</description>
     </item>
     
     <item>
